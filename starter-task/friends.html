@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <link href="https://pw.sabio.la/dist/all-site.css" rel="stylesheet" />
+    <script src="https://pw.sabio.la/api/js/site"></script>
+    <script src="https://unpkg.com/axios@0.19.2/dist/axios.min.js"></script>
+    <script src="friends.js"></script>
+    <script src="users.js"></script>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <section>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="homepage.html">Home<span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">People</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Blogs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Tech Co.</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Jobs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Events</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="friends.html">Friends</a>
+                    </li>
+                </ul>
+                <form class="form-inline">
+                    <button class="btn btn-outline-danger my-2 my-sm-0" onClick="logOut()" type="button">Log Out</button>
+                </form>
+            </div>
+        </nav>
+    </section>
+
+    <section>
+        <div class="container">
+            <div class="mb-3">
+                <label for="title" class="form-label">Name</label>
+                <input type="name" class="form-control" id="title" placeholder="Name">
+            </div>
+        
+            <div class="mb-3">
+                <label for="bio" class="form-label">Bio</label>
+                <input type="bio" class="form-control" id="bio" placeholder="Bio">
+            </div>
+        
+            <div class="mb-3">
+                <label for="summary" class="form-label">Summary</label>
+                <input type="summary" class="form-control" id="summary" placeholder="Summary">
+            </div>
+        
+            <div class="mb-3">
+                <label for="headline" class="form-label">Headline</label>
+                <input type="headline" class="form-control" id="headline" placeholder="Headline">
+            </div>
+        
+            <div class="mb-3">
+                <label for="slug" class="form-label">Slug</label>
+                <input type="slug" class="form-control" id="slug" placeholder="Slug">
+            </div>
+        
+            <div class="mb-3">
+                <label for="avatar" class="form-label">Avatar</label>
+                <input type="url" class="form-control" id="primaryImage" placeholder="Avatar">
+            </div>
+        
+            <form>
+                <div>
+                    <button id="addFriend" type="button" class="btn btn-success">Add</button>
+                    <button id="showFriends" type="button" class="btn btn-warning">Show Friends</button>
+                    <button id="cancel" type="button" class="btn btn-danger" >Cancel</button>
+                    <button id="updateFriend" type="button" class="btn btn-warning" hidden>Update</button>
+                </div>
+            </form>
+        </div>
+    </section>
+    
+    <section>
+        <div class="clone-container"></div>
+    </section>
+
+    <script id="friendCard" type="text/template">
+        <div class="col-md-6 card-user ">
+            <div class="id">
+                <div class="card col-md-6">
+                    <div class="card border-0 shadow">
+                        <img src="https://i.pravatar.cc/400?img=48" class="card-img-top" alt="...">
+                        <div class="card-body text-center">
+                            <h3 class="card-title mb-0">Title in Template</h3>
+                            <h5 class="card-headline mb-0">Title in Template</h5>
+                            <h5 class="card-bio mb-0">Title in Template</h5>
+                            <h5 class="card-summary mb-0">Title in Template</h5>
+                            <h6 class="card-id mb-0" hidden>Title in Template</h6>
+                            <form>
+                                <div>
+                                    <button type="button" class="btn btn-danger deleteFriend">Delete</button>
+                                    <button type="button" class="btn btn-primary updateFriend">Edit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+</body>
+
+<script>
+    function startUp() {
+        loginUser();
+        currentUser();
+        wireHandlers();
+    }
+
+    function wireHandlers() {
+        $("#addFriend").on("click", addFriend)
+        $("#showFriends").on("click", showFriends)
+        $(".clone-container").on("click", '.updateFriend', updateFriend)
+
+    }
+
+    const loginUser = () => {
+        const payload = {
+            "email": "maurice.g.washington@gmail.com",
+            "password": "Kyocera6*",
+            "tenantId": "U01TY0VT466"
+        }
+
+        const config = {
+            method: "POST",
+            url: "https://api.remotebootcamp.dev/api/users/login",
+            data: payload,
+            crossdomain: true,
+            headers: { "Content-Type": "application/json" }
+        };
+
+        return axios(config)
+            .then(function (response) {
+                console.log(response)
+            })
+            .catch(function (response) {
+                console.error(response)
+            });
+    }
+
+    const currentUser = () => {
+        userService.current()
+            .then(currentUserSuccess)
+            .catch(currentUserError)
+    }
+
+    const currentUserSuccess = (response) => {
+        userService.userById(response.data.item.id)
+            .then(userByIdSuccess)
+            .catch(userByIdError)
+    }
+
+    const currentUserError = (response) => {
+        console.error(response)
+    }
+
+    const userByIdSuccess = (response) => {
+        console.log(response.data.item)
+    }
+
+    const userByIdError = (response) => {
+        console.error(response)
+    }
+
+    function getTemplate() {
+        const templHtml = $("#friendCard").html();
+        return $(templHtml)
+    }
+
+    function renderFriends(data) {
+        for (var i=0; i < data.length; i++) {
+            const friend = getTemplate();
+
+            friend.find("img").attr("src", data[i].primaryImage.imageUrl)
+            friend.find(".card-title").text(data[i].title)
+            friend.find(".card-headline").text(data[i].headline)
+            friend.find(".card-bio").text(data[i].bio)
+            friend.find(".card-summary").text(data[i].summary)
+            friend.find(".card-user").after(data[i].id)
+
+            $(".clone-container").append(friend);
+        }
+    }
+
+    //const mapFriends = showFriends.map(renderFriends)
+
+    const logOut = () => {
+        userService.logout()
+            .then(logOutSuccess)
+            .catch(logOutError)
+    }
+
+    const logOutSuccess = () => {
+        var url = "home.html";
+        $(location).attr('href', url);
+    }
+
+    const logOutError = () => {
+        console.log("You did not log off")
+    }
+
+    const addFriend = () => {
+
+        const payload = {
+            "title": $("#title").val(),
+            "bio": $("#bio").val(),
+            "summary": $("#summary").val(),
+            "headline": $("#headline").val(),
+            "slug": $("#slug").val(),
+            "statusId": "active",
+            "primaryImage": $("#primaryImage").val()
+        }
+        friendsService.add(payload)
+            .then(addSuccess)
+            .catch(addError)
+    }
+
+    const addSuccess = (response) => {
+        console.log(response)
+    }
+
+    const addError = (response)  => {
+        console.error(response)
+    }
+
+    const showFriends = () => {
+        friendsService.all()
+            .then(showSuccess)
+            .catch(showError)
+    }
+
+    const showSuccess = (response) => {
+        renderFriends(response.data.item.pagedItems)
+        console.log(response.data.item.pagedItems)
+    }
+
+    const showError = (response) => {
+        console.error(response)
+    }
+
+    const updateFriend = () => {
+        
+        $('#addFriend').toggle();
+        $('#showFriends').toggle();
+        $('#cancel').toggle();
+        $('#updateFriend').toggle();
+        
+
+        // friendsService.update(id)
+        //      .then(updateSuccess)
+        //      .catch(updateError)
+    }
+
+     const updateSuccess = (response) => {
+         console.log("success")
+     }
+
+     const updateError = (response) => {
+         console.error("error")
+     }
+</script>
+
+
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <link href="https://pw.sabio.la/dist/all-site.css" rel="stylesheet" />
+    <script src="https://pw.sabio.la/api/js/site"></script>
+    <script src="https://unpkg.com/axios@0.19.2/dist/axios.min.js"></script>
+    <script src="users.js"></script>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <section>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="homepage.html">Home<span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">People</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Blogs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Tech Co.</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Jobs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Events</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="friends.html">Friends</a>
+                    </li>
+                </ul>
+                <form class="form-inline">
+                    <button class="btn btn-outline-danger my-2 my-sm-0" onClick="logOut()" type="button">Log Out</button>
+                </form>
+            </div>
+        </nav>
+    </section>
+
+    <div class="clone-container"></div>
+
+    <script id="userData" type="text/template">
+        <div class="row my-3 t-3 card-user ">
+            <div class="col-md-12 mb-4">
+                <div class="card border-0 shadow">
+                    <img src="https://i.pravatar.cc/400?img=48" class="card-img-top" alt="...">
+                    <div class="card-body text-center">
+                        <h1 class="card-title mb-0">Title in Template</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+</body>
+
+<script>
+    function startUp() {
+        loginUser();
+        currentUser();
+    }
+
+    const loginUser = () => {
+        const payload = {
+            "email": "maurice.g.washington@gmail.com",
+            "password": "Kyocera6*",
+            "tenantId": "U01TY0VT466"
+        }
+
+        const config = {
+            method: "POST",
+            url: "https://api.remotebootcamp.dev/api/users/login",
+            data: payload,
+            crossdomain: true,
+            headers: { "Content-Type": "application/json" }
+        };
+
+        return axios(config)
+            .then(function (response) {
+                console.log(response)
+            })
+            .catch(function (response) {
+                console.error(response)
+            });
+    }
+
+    const currentUser = () => {
+        userService.current()
+            .then(currentUserSuccess)
+            .catch(currentUserError)
+    }
+
+    const currentUserSuccess = (response) => {
+        userService.userById(response.data.item.id)
+            .then(userByIdSuccess)
+            .catch(userByIdError)
+    }
+
+    const currentUserError = (response) => {
+        console.error(response)
+    }
+
+    const userByIdSuccess = (response) => {
+        renderUserInfo(response.data.item)
+        console.log(response.data.item)
+    }
+
+    const userByIdError = (response) => {
+        console.error(response)
+    }
+
+    function getTemplate() {
+        const templHtml = $("#userData").html();
+        return $(templHtml)
+    }
+
+    function renderUserInfo(data) {
+        const userInfo = getTemplate();
+
+        userInfo.find("img").attr("src", data.avatarUrl)
+        userInfo.find(".card-title").text(data.firstName)
+
+        $(".clone-container").append(userInfo);
+    }
+
+    const logOut = () => {
+        userService.logout()
+            .then(logOutSuccess)
+            .catch(logOutError)
+    }
+
+    const logOutSuccess = () => {
+        var url = "home.html";
+        $(location).attr('href', url);
+    }
+
+    const logOutError = () => {
+        console.log("You did not log off")
+    }
+</script>
+
+
+</html>
