@@ -1,4 +1,5 @@
 import axios from "axios";
+import cors from "cors";
 
 const rssService = {
     endpoint: "https://theoldreader.com/reader/api/0"
@@ -7,6 +8,7 @@ const rssService = {
 rssService.starredFeeds = () => {
     const config = {
         method: "GET",
+        mode: cors,
         url: rssService.endpoint + "/stream/contents?output=json&s=user/-/state/com.google/starred",
         crossdomain: true,
         headers: { 
