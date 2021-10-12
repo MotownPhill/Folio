@@ -1,25 +1,25 @@
 import express from "express";
-import data from "./data/contents.json"
+import data from "./data/unreadContent.json"
 import cors from "cors";
+import apiRouter from './api';
 
 const app = express();
-const PORT = 4000;
+const PORT = 3000;
 
 app.use(cors({
     origin: '*',
 }))
 
+app.use('/api', apiRouter);
 app.use(express.json())
 
-app.get('/', (req,res) => 
-    res.send(`Node and express server running on port ${PORT}`)
-);
-app.get('/rss', (req,res) => {
-    console.log(req.body);
-    res.send()
-})
+app.get('/', (req,res) => {
+    // res.json(data)
+    res.send('Motown Philly back again')
+});
+
 
 app.listen(PORT, () => {
-    // console.log(`Server running on port ${PORT}`); /
+    console.log(`Server running on port ${PORT}`);
     console.log(data);
 });
