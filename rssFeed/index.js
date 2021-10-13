@@ -1,25 +1,9 @@
-import express from "express";
-import data from "./data/unreadContent.json"
-import cors from "cors";
-import apiRouter from './api';
+import express from 'express';
+import data from '../data/unreadContent.json'
+const router = express.Router();
 
-const app = express();
-const PORT = 3000;
-
-app.use(cors({
-    origin: '*',
-}))
-
-app.use('/api', apiRouter);
-app.use(express.json())
-
-app.get('/', (req,res) => {
-    // res.json(data)
-    res.send('Motown Philly back again')
+router.get('/', (req, res) => {
+    res.json(data);
 });
 
-
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-    console.log(data);
-});
+export default router;
