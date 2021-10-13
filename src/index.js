@@ -1,12 +1,33 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 
+
 import data from "../data/unreadContent.json";
-console.log(data);
+
+// function Article(props) {
+//   const article =
+// }
+const App = (props) => {
+  // const [articles, setArticles] = useState([]);
+
+  // useEffect(()=> {
+  //   const mapArticles = (article) => {
+  //     return <div>{article}</div>
+  //   }
+  //   const mappedArticles = data.items.map(mapArticles)
+  //   setArticles(mappedArticles)
+  // })
+
+  return (
+      <div className="container">
+          <h1>{data.title}</h1>
+      </div>
+  );
+};
 
 
 ReactDOM.render(
-  React.createElement('h2', null, 'Motown Philly Back Again'),
+  <App articles={data.items} />,
   document.getElementById('root')
 );
 
