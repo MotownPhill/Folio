@@ -1,23 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
-// import "./index.css";
-// import "./services/serviceHelper";
-// import "bootstrap/dist/css/bootstrap.css";
-// import "react-toastify/dist/ReactToastify.css";
-// import "sweetalert2/dist/sweetalert2.min.css";
-// import { ToastContainer } from "react-toastify";
-import App from "./App";
-// import { BrowserRouter } from "react-router-dom";
 
+import data from "../data/unreadContent.json";
+console.log(data);
 
 
 ReactDOM.render(
-  // <BrowserRouter>
-     <App></App>,
-  //   <ToastContainer />
-  // </BrowserRouter>,
-
-  document.getElementById("root")
+  React.createElement('h2', null, 'Motown Philly Back Again'),
+  document.getElementById('root')
 );
 
 // If you want your app to work offline and load faster, you can change
